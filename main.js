@@ -1,30 +1,34 @@
-'use strict';
+'use strict'
+const express = require('express')
+const session = require('express-session')
+const bodyParser = require('body-parser')
+const form = require('multer')()
+const Config = require('./config/Config.js')
 
-const Global        = require ('./global.js');
-const insert        = require ('./routes/insert.js')
-const modify        = require ('./routes/modify.js')
-const login         = require ('./routes/login.js')
+const app = express()
+const config = new Config('PRO')
 
-Global.app.use ('/insert' , insert);
-Global.app.use ('/modify' , modify);
-Global.app.use ('/login' , login);
-//parse application/x-www-form-urlencoded
-Global.app.use (Global.bodyParser.urlencoded({ extended : false }));
-Global.app.set ('view engine' , 'pug');
-Global.app.set ('views' , './html')
-Global.app.use (Global.express.static('html'));
+app.use(session({
+  secret: config.sessionSecret,
+  resave: false,
+  saveUninitialized: true
+}))
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({ extended: false }))
+app.set('view engine', 'ejs')
+app.use('/layout', express.static('./views/layout'))
+app.set('port', (process.env.PORT || 3000))
 
-//GET
-Global.app.get('/' , function ( req , res , next) {
-  // res.send ('Hello World!');
-  res.render ('index');
-});
-
-Global.app.get('/download/:name' , function ( req , res , next) {
-    let path = __dirname + '/uploads/' + req.params.name;
-    res.download (path);
+app.get('/', function (req, res, next) {
+  // res.send ('Hello World!')
+  res.render('pages/index')
 })
 
-Global.app.listen (3000, function () {
-  console.log('Server is running...');
+// app.get('/download/:name' , function ( req , res , next) {
+//     let path = __dirname + '/uploads/' + req.params.name
+//     res.download (path)
+// })
+
+app.listen(app.get('port'), () => {
+  console.log('Server is running at : ' + app.get('port'))
 })
