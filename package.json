@@ -1,0 +1,20 @@
+{
+  "name": "documentmod",
+  "version": "1.0.0",
+  "description": "modify Slate",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Bui Viet Hung",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "express-session": "^1.14.2",
+    "fs": "0.0.1-security",
+    "md5": "^2.2.1",
+    "multer": "^1.2.0",
+    "mysql": "^2.12.0"
+  }
+}
