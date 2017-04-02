@@ -7,8 +7,14 @@ router.get('/', (req, res, next) => {
 })
 
 router.post('/', (req, res, next) => {
-  console.log('Hello here : ' + req.body.testerID)
-  res.status(200).json({OK: {msg: 'Login ok'}})
+  var testerID = req.body.testerID
+  var password = req.body.password
+  console.log('Hello here : ' + testerID + ' : ' + password)
+  if (testerID === 'test' && password === 'test') {
+    res.status(200).json({OK: {msg: 'Login ok'}})
+  } else {
+    res.json({err: {msg: 'Invalid password or username'}})
+  }
 })
 
 module.exports = router

@@ -1,6 +1,7 @@
 'use strict'
 const express = require('express')
 const session = require('express-session')
+const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const form = require('multer')()
 
@@ -9,7 +10,8 @@ const Tester = require('./router/tester.js')
 
 const app = express()
 const config = new Config('PRO')
-
+app.use(helmet())
+app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
 app.use(session({
   secret: config.sessionSecret,
   resave: false,
