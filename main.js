@@ -8,14 +8,18 @@ const form = require('multer')()
 const Config = require('./config/Config.js')
 const Tester = require('./router/tester.js')
 
+// console.log()
+
 const app = express()
 const config = new Config('PRO')
 app.use(helmet())
-app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
+// app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
+app.set('trust proxy', 1)
 app.use(session({
   secret: config.sessionSecret,
   resave: false,
-  saveUninitialized: true
+  saveUninitialized: true,
+  cookie: { secure: true }
 }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

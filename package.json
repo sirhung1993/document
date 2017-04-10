@@ -4,12 +4,13 @@
   "description": "modify Slate",
   "main": "main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --reporter spec"
   },
   "author": "Bui Viet Hung",
   "license": "MIT",
   "dependencies": {
     "body-parser": "^1.15.2",
+    "chai": "^3.5.0",
     "ejs": "^0",
     "express": "^4.14.0",
     "express-session": "^1.14.2",
@@ -17,6 +18,7 @@
     "helmet": "^3.5.0",
     "md5": "^2.2.1",
     "multer": "^1.2.0",
-    "mysql": "^2.12.0"
+    "mysql": "^2.12.0",
+    "request": "^2.81.0"
   }
 }
