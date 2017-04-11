@@ -19,7 +19,12 @@ app.use(session({
   secret: config.sessionSecret,
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: true }
+  proxy: true,
+  cookie: {
+    secure: true,
+    maxAge: 3600000,
+    httpOnly: false
+   }
 }))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: false }))

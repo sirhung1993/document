@@ -46,6 +46,7 @@ module.exports = class Database {
                 reject({err: {msg : 'Invalid password or username'}})
               }
             })
+            connection.release()
           })
 
       }).catch((err) => {
@@ -57,6 +58,41 @@ module.exports = class Database {
 
     registerNew (username, password) {
 
+      var testerInfo = {
+        testerID: username,
+        passWord: password
+      }
+
+      var connectionDB = this.connectDB()
+      var registerProcess = connectionDB.then((connection) => {
+        return new Promise((resolve, reject) => {
+          connection.query('SELECT id FROM testerInfo WHERE ' +
+          ' testerID = ?', testerInfo.testerID, (err, results, fields) => {
+            if (results.length === 0) {
+              resolve(connection)
+            } else {
+              connection.release()
+              reject({err: {msg: 'The username has been used!'}})
+            }
+          })
+        })
+      })
+      var registerProcess2 = registerProcess.then ((connection) => {
+        connection.query('INSERT INTO testerInfo SET ', testerInfo, (err, results, fields) => {
+          if (!err){
+            return Promise.resolve()
+          } else {
+            console.log('  HUNG--------------  ' + err)
+            return Promise.reject(err)
+          }
+          connection.release()
+        })
+      }).catch ((err) => {
+        console.log('err FAIL BA NO ROI')
+        return Promise.reject(err)
+      })
+
+      return registerProcess2
     }
 
 }

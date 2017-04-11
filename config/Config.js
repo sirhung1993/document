@@ -19,6 +19,7 @@ module.exports = class Config {
       this.dbHostname = 'testhostname'
       this.dbDatabasename = 'testDBname'
       this.sessionSecret = 'testSecret'
+      this.passwordKey = 'passwordKey'
     } else if (DEVorPro === 'PRO' || productionConfigDoesNotExist === undefined) {
       //  For Production Version
       let productionConfigurationPath = path.join(__dirname, '/ProConfig.js')
@@ -28,6 +29,7 @@ module.exports = class Config {
       this.dbHostname = ProConfig.dbHostname
       this.dbDatabasename = ProConfig.dbDatabasename
       this.sessionSecret = ProConfig.sessionSecret
+      this.passwordKey = ProConfig.passwordKey
     }
   }
   }
