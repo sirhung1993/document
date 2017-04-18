@@ -20,6 +20,9 @@ module.exports = class Config {
       this.dbDatabasename = 'testDBname'
       this.sessionSecret = 'testSecret'
       this.passwordKey = 'passwordKey'
+      this.encryptingPassword = function(username) {
+        return username + 'It need to be encrypted here'
+      }
     } else if (DEVorPro === 'PRO' || productionConfigDoesNotExist === undefined) {
       //  For Production Version
       let productionConfigurationPath = path.join(__dirname, '/ProConfig.js')
@@ -29,7 +32,7 @@ module.exports = class Config {
       this.dbHostname = ProConfig.dbHostname
       this.dbDatabasename = ProConfig.dbDatabasename
       this.sessionSecret = ProConfig.sessionSecret
-      this.passwordKey = ProConfig.passwordKey
+      this.encryptingPassword = ProConfig.encryptingPassword
     }
   }
   }
