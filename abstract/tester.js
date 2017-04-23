@@ -1,10 +1,12 @@
 'use strict'
 const Config = require('../config/Config.js')
 const config = new Config()
+const fs = require('fs')
 
 const DB = require('./database.js')
 const db = new DB()
-const dbDocument = require('./dbDocument.js')
+const DBDocument = require('./dbDocument.js')
+const dbDocument = new DBDocument()
 
 module.exports = class Tester {
     constructor (Tester) {
@@ -53,9 +55,11 @@ module.exports = class Tester {
       return setVerificationProcess
     }
 
-    addNewDocument (documentName) {
-      var addNewDocumentProcess = db.addNewADocument(documentName, this.testerID).then(() => {
-
+    addNewDocument (documentName, documentContent) {
+      var addNewDocumentProcess = dbDocument.addNewADocument(documentName, documentContent, this.testerID).then(() => {
+        // console.log('ADD NEW')
+      }).catch((id) => {
+        // console.log('Test : ' + id)
       })
     }
 }

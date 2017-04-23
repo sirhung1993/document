@@ -1,5 +1,6 @@
 const express = require('express')
 const Tester = require('../abstract/tester.js')
+const xssFilters = require('xss-filters')
 
 const router = express.Router()
 
@@ -96,7 +97,11 @@ router.post('/document/addnew', (req, res, next) => {
   if(req.session.tester) {
     if (req.session.isVerified === true) {
       var tester = new Tester({testerID: req.session.tester})
-      tester.addNewDocument('testla')
+      var documentName = req.body.documentName
+      var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+      // console.log(documentName + "\n" +
+      //             documentContent + "\n")
+      tester.addNewDocument(documentName, documentContent)
     } else {
       res.status(401).json({err: {msg: 'You need to be a verified user in order to add new document!'}})
     }
