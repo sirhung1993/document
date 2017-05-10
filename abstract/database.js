@@ -1,5 +1,6 @@
 'use strict'
 const mysql = require('mysql')
+const fs = require('fs')
 const Config = require('../config/Config.js')
 const config = new Config()
 
@@ -62,6 +63,7 @@ module.exports = class Database {
     }
     /*
     * Create new user with given name and password
+    * then create a personalStorageLocation for each new user
     * return a Promise
     */
     registerNew (username, password) {
@@ -96,18 +98,32 @@ module.exports = class Database {
         return new Promise ((resolve, reject) => {
           connection.query('INSERT INTO ' + dbTesterInfo + 'SET ?', testerInfo, (err, results, fields) => {
             if (!err){
+              connection.release()
               resolve()
             } else {
               reject(err)
             }
-            connection.release()
           })
         })
       }).catch ((err) => {
-        connection.release()
+        // connection.release()
         return Promise.reject(err)
       })
-      return registerProcess
+
+      var registerProcess3 = registerProcess2.then((connection) => {
+        return new Promise ((resolve, reject) => {
+          fs.mkdir(config.personalStorageLocation + '/' + username, 0o700,
+          (err) => {
+            if(!err) {
+              resolve()
+            } else {
+              reject(err)
+            }
+          })
+        })
+      })
+
+      return registerProcess3
     }
     /*
     * Check if and only if there is only one row of Username

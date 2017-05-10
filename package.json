@@ -19,7 +19,10 @@
     "md5": "^2.2.1",
     "multer": "^1.2.0",
     "mysql": "^2.12.0",
+    "node-cmd": "^3.0.0",
+    "nodemailer": "^4.0.1",
     "request": "^2.81.0",
+    "smtp-server": "^3.0.1",
     "xss-filters": "^1.2.7"
   }
 }

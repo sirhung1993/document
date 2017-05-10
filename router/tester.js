@@ -42,6 +42,14 @@ router.post('/login', (req, res, next) => {
         })
 })
 
+router.get('/login', (req, res, next) => {
+  if(req.session.tester) {
+    res.status(200).json({OK: {msg: 'Login ok'}})
+  } else {
+    res.status(500).json({err: {msg: 'You need to login first!'}})
+  }
+})
+
 router.post('/register', (req, res, next) => {
   var testerInfo = {
     testerID: req.body.testerID,
@@ -56,10 +64,7 @@ router.post('/register', (req, res, next) => {
     res.status(409).json({err: {msg: err}})
   })
 })
-/*
-* Set read-write permission for a USER by setting isVerified = 1
-* only Verified user could set other's verification
-*/
+
 router.get('/getVerification', (req, res, next) => {
   if(req.session.tester) {
     var tester = new Tester({testerID: req.session.tester})
@@ -76,7 +81,10 @@ router.get('/getVerification', (req, res, next) => {
     res.status(401).json({err: {msg: 'You need to login first!'}})
   }
 })
-
+/*
+* Set read-write permission for a USER by setting isVerified = 1
+* only Verified user could set other's verification
+*/
 router.post('/setVerification', (req, res, next) => {
   if(req.session.tester) {
     var sourceTester = req.session.tester
@@ -98,15 +106,82 @@ router.post('/document/addnew', (req, res, next) => {
     if (req.session.isVerified === true) {
       var tester = new Tester({testerID: req.session.tester})
       var documentName = req.body.documentName
-      var documentContent = xssFilters.inHTMLData(req.body.documentContent)
-      // console.log(documentName + "\n" +
-      //             documentContent + "\n")
-      tester.addNewDocument(documentName, documentContent)
+
+      tester.addNewDocument(documentName).then(() => {
+        res.status(200).json({OK: {msg: 'Add new document suscessfully!'}})
+      }).catch((err) => {
+        res.status(400).json(err)
+      })
     } else {
       res.status(401).json({err: {msg: 'You need to be a verified user in order to add new document!'}})
     }
   } else {
     res.status(401).json({err: {msg: 'You need to login first!'}})
+  }
+})
+
+router.post('/document/save', (req, res, next) => {
+  if(req.session.tester) {
+    if(req.session.isVerified === true) {
+      var tester = new Tester({testerID: req.session.tester})
+      var documentName = req.body.documentName
+      var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+      tester.saveDocument(documentName, documentContent).then(() => {
+        return res.status(200).json({OK: {msg: 'You save the document suscessfully!'}})
+      }).catch((err) => {
+        res.status(400).json({err: {msg: err.code}})
+      })
+    } else {
+      res.status(401).json({err: {msg: 'You need to be a verified user in order to add new document!'}})
+    }
+  } else {
+    res.status(401).json({err: {msg: 'You need to login first!'}})
+  }
+})
+
+router.post('/document/saveAndSubmit', (req, res, next) => {
+  if(req.session.tester) {
+    if(req.session.isVerified === true) {
+      var tester = new Tester({testerID: req.session.tester})
+      var documentName = req.body.documentName
+      var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+      tester.saveAndSubmitDocument(documentName, documentContent).then(() => {
+         res.status(200).json({OK: {msg: 'You save and submit the document suscessfully!'}})
+         return 1
+      }).catch((err) => {
+        res.status(400).json({err: {msg: err.code}})
+      })
+    } else {
+      res.status(401).json({err: {msg: 'You need to be a verified user in order to add new document!'}})
+    }
+  } else {
+    res.status(401).json({err: {msg: 'You need to login first!'}})
+  }
+})
+
+router.get('/getAllDocumentName', (req, res, next) => {
+  if(req.session.isVerified === true) {
+    var tester = new Tester({testerID: req.session.tester})
+    tester.getAllDocumentName().then((AllDocumentNames) => {
+      res.status(200).json({OK: {msg: AllDocumentNames}})
+      return 1
+    })
+  } else {
+      res.status(401).json({err: {msg: 'You need to be a verified user in order to get information!'}})
+      return 1
+  }
+})
+
+router.get('/getAllDocumentNameOfATester', (req, res, next) => {
+  if(req.session.isVerified === true) {
+    var tester = new Tester({testerID: req.session.tester})
+    tester.getAllDocumentNameOfATester().then((AllTesterDoc) => {
+      res.status(200).json({OK: {msg: AllTesterDoc}})
+      return 1
+    })
+  } else {
+      res.status(401).json({err: {msg: 'You need to be a verified user in order to get information!'}})
+      return 1
   }
 })
 

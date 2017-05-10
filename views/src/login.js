@@ -46,11 +46,26 @@ function loadCodeMirror(cb) {
 	cb
 }
 
-$(document).ready(function () {
-    $('#login').click(function () {
-    $('#loginForm').load('views/iframe/login_iframe.ejs', null, function (responseTxt, statusTxt, xhr) {
-        if(statusTxt === 'success') {
-          $('#loginButton').click(function () {
+
+
+var loginProcess = new Promise((resolve, reject) => {
+	$(document).ready(function () {
+		resolve()
+	})
+})
+var loginProcess1 = loginProcess.then(()=> {
+	return new Promise((resolve, reject) => {
+		$('#login').click(function () {
+			resolve()
+		})
+	})
+})
+
+var loginProcess2 = loginProcess1.then(() => {
+	return new Promise ((resolve, reject) => {
+		$('#loginForm').load('views/iframe/login_iframe.ejs', null, function (responseTxt, statusTxt, xhr) {
+				if(statusTxt === 'success') {
+					$('#loginButton').click(function () {
 						var testerID = $("[name ='testerID']").val()
 						var password = $("[name ='password']").val()
 						$.post('/tester/login',
@@ -59,21 +74,41 @@ $(document).ready(function () {
 							password : password
 						},function(data, status){
 							if (data.OK) {
-								successLogin(loadCodeMirror())
+									successLogin(loadCodeMirror())
+									resolve()
 							} else {
-								failLogin()
+									failLogin()
+									reject()
 							}
 						})
-          })
-        } else {
-
-        }
-      })
-    })
-  })
-
-$(document).ready(function () {
-	$('#logout').click(function(){
-
+					})
+				} else {
+					reject()
+				}
+			})
 	})
 })
+
+var loginProcess3 = loginProcess2.then(() => {
+	console.log('It should be OK!')
+	return new Promise((resolve, reject) => {
+		$('#logout').click(function(){
+			$.get('tester/logout', (data, status) => {
+				console.log(data + " : " + status)
+				$('#login').show()
+				$('#loginForm').show()
+				$('#codemirror').hide()
+			})
+		})
+	})
+}).catch(() => {
+	console.log('Err')
+})
+
+loginProcess3.then()
+
+// $(document).ready(function () {
+// 	$('#logout').click(function(){
+//
+// 	})
+// })

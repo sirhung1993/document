@@ -55,11 +55,59 @@ module.exports = class Tester {
       return setVerificationProcess
     }
 
-    addNewDocument (documentName, documentContent) {
-      var addNewDocumentProcess = dbDocument.addNewADocument(documentName, documentContent, this.testerID).then(() => {
+    addNewDocument (documentName) {
+      var addNewDocumentProcess = dbDocument.addNewADocument(documentName, this.testerID)
+
+      addNewDocumentProcess.then(() => {
         // console.log('ADD NEW')
-      }).catch((id) => {
+        return true
+      }).catch((err) => {
         // console.log('Test : ' + id)
+        return err
       })
+      return addNewDocumentProcess
+    }
+
+    saveDocument (documentName, documentContent) {
+      var saveDocumentPro = dbDocument.saveDocument(documentName, documentContent, this.testerID)
+      saveDocumentPro.then(() => {
+        return true
+      }).catch((err) => {
+        // console.log('Test : ' + id)
+        console.log(err)
+        return err
+      })
+      return saveDocumentPro
+    }
+
+    saveAndSubmitDocument(documentName, documentContent) {
+      var saveAndSubmitDocumentPro = dbDocument.saveAndSubmitDocument(documentName, documentContent, this.testerID)
+      saveAndSubmitDocumentPro.then(() => {
+        return true
+      }).catch((err) => {
+        return err
+      })
+
+      return saveAndSubmitDocumentPro
+    }
+
+    getAllDocumentName() {
+      var getAllDoc = dbDocument.getAllDocumentName()
+      getAllDoc.then((docName) => {
+        return docName
+      }).catch((err) => {
+        return err
+      })
+      return getAllDoc
+    }
+
+    getAllDocumentNameOfATester() {
+      var getAllDoc = dbDocument.getAllDocumentNameOfATester(this.testerID)
+      getAllDoc.then((docName) => {
+        return docName
+      }).catch((err) => {
+        return err
+      })
+      return getAllDoc
     }
 }

@@ -28,14 +28,14 @@ module.exports = class dbDocument {
             var docName = results
             var quantity = docName.length
             if(quantity === 1) {
-              connection.release()
+              //connection.release()
               resolve(true)
             } else if (quantity === 0){
               // console.log('Inside dbDoc : ' + docName[0].id)
-              connection.release()
+              //connection.release()
               resolve(false)
             } else {
-              connection.release()
+              //connection.release()
               reject({err: {msg: 'There are two of them in Database - System ERR'}})
             }
           } else {
@@ -75,7 +75,7 @@ module.exports = class dbDocument {
     })
   }
 
-  addNewADocument (documentName, documentContent, testerID) {
+  addNewADocument (documentName, testerID) {
     var isDocumentExisted = this.isDocumentExisted(documentName)
     var isDocumentStored = this.isDocumentStored(documentName)
     var documentInfo = {
@@ -84,13 +84,10 @@ module.exports = class dbDocument {
     }
 
     var addNewDocProcess = Promise.all([isDocumentExisted, isDocumentStored]).then((values) => {
-
       return new Promise((resolve, reject) => {
         if(!(values[0] || values[1])) {
-          console.log('New')
           resolve()
         } else if(!(values[0] && values[1])) {
-          console.log('MISMATCH')
           reject({err: {msg: 'There is a mismatch between database and storage folder'}})
         } else {
           reject({err: {msg: 'It is not a new document name.Please change!'}})
@@ -106,10 +103,10 @@ module.exports = class dbDocument {
         this.dbConnect.then((connection) => {
           connection.query('INSERT INTO ' + dbDocumentInfo + ' SET ?', documentInfo, (err, results, fields) => {
             if(!err) {
-              console.log('Add db suscessfully!')
+              // //connection.release()
               resolve()
             } else {
-              console.log(err)
+              // //connection.release()
               reject(err)
             }
           })
@@ -118,9 +115,168 @@ module.exports = class dbDocument {
         })
       })
     }).catch((err) => {
-      console.log(err)
       return Promise.reject(err)
     })
+
     return addNewDocProcess2
+  }
+
+  /*
+  * Check that the document exist in Database then
+  * Save the current document into personalStorageLocation as a AutoSave copy
+  * The SLATE page are not UPDATE after saveDocument
+  * resolve() if correct and reject(err) if not
+  */
+
+  saveDocument (documentName, documentContent, testerID) {
+    var saveDocumentPro = this.isDocumentExisted(documentName).then((isDocumentExisted) => {
+      return new Promise((resolve, reject) => {
+        if(isDocumentExisted === true) {
+          resolve()
+        } else {
+          // console.log('FAIL : ' + isDocumentExisted)
+          reject(isDocumentExisted)
+        }
+      })
+      }).catch((err) => {
+        return Promise.reject(err)
+      })
+
+    // var versionByDate = new Date().getTime()
+    var storageLocation = config.personalStorageLocation + '/' + testerID + '/' + documentName + '-AutoSave' + '.md'
+
+    var saveDocumentPro1 = saveDocumentPro.then(() => {
+      // console.log(documentContent)
+      // console.log(storageLocation)
+      return new Promise((resolve, reject) => {
+        fs.writeFile(storageLocation, documentContent, {
+          encoding: 'utf8',
+          mode: 0o700,
+          flag: 'w+'
+        },(err) => {
+          if (!err) {
+            resolve()
+          } else {
+            // console.log(err)
+            reject(err)
+          }
+        })
+      })
+    }).catch((err) => {
+      return Promise.reject(err)
+    })
+
+    return saveDocumentPro1
+  }
+  /*
+  * 1/ save the current conttent to AutoSave file
+  * 2/ create a versionByDate file
+  * 3/ Update the official document used for SLATE reference
+  * 4/ Set isReleased status to YES in DB
+  * Update SLATE page
+  *
+  */
+  saveAndSubmitDocument (documentName, documentContent, testerID) {
+    var saveAndSubmitProcess = this.saveDocument(documentName, documentContent, testerID).then(() => {
+      return new Promise((resolve, reject) => {
+        var versionByDate = new Date().getTime()
+        var storageLocation = config.personalStorageLocation + '/' + testerID + '/' + documentName + '-' + versionByDate + '.md'
+        fs.writeFile(storageLocation, documentContent, {
+          encoding: 'utf8',
+          mode: 0o700,
+          flag: 'wx'
+        }, (err) => {
+          if(!err) {
+            resolve()
+          } else {
+            reject()
+          }
+        })
+      })
+    }).catch((err) => {
+      return Promise.reject(err)
+    })
+
+    var saveAndSubmitProcess2 = saveAndSubmitProcess.then(() => {
+      return new Promise((resolve, reject) => {
+        var slateDocumentFileLocation = config.documentStorageLocation + '/' + documentName + '.md'
+
+        fs.writeFile(slateDocumentFileLocation, documentContent, {
+          encoding: 'utf8',
+          mode: 0o700,
+          flag: 'w+'
+        }, (err) => {
+          if (!err) {
+            resolve()
+          } else {
+            reject(err)
+          }
+        })
+      })
+    }).catch((err) => {
+      return Promise.reject(err)
+    })
+
+    var saveAndSubmitProcess3 = saveAndSubmitProcess2.then(() => {
+      return new Promise((resolve, reject) => {
+        this.dbConnect.then((connection) => {
+          connection.query('UPDATE ' + dbDocumentInfo + ' SET isReleased = 1 WHERE documentName = ?', documentName,
+          (err, results, fields) => {
+            if(!err) {
+              resolve()
+            } else {
+              reject(err)
+            }
+          })
+        })
+      })
+    }).catch((err) => {
+      return Promise.reject(err)
+    })
+
+    return saveAndSubmitProcess3
+  }
+
+  getAllDocumentName() {
+    return new Promise ((resolve, reject) => {
+      this.dbConnect.then((connection) => {
+        connection.query('SELECT documentName FROM ' + dbDocumentInfo,
+      (err, results, fields) => {
+        if(!err) {
+          var allDocumentNames = []
+          for (var i in results) {
+            allDocumentNames.push(results[i].documentName)
+          }
+          resolve(allDocumentNames)
+        } else {
+          reject(err)
+        }
+      })
+      }).catch((err) => {
+        reject(err)
+      })
+    })
+  }
+
+  getAllDocumentNameOfATester(testerID) {
+    return new Promise ((resolve, reject) => {
+      this.dbConnect.then((connection) => {
+        connection.query('SELECT documentName FROM ' + dbDocumentInfo
+        + ' WHERE testerID = ?', testerID,
+      (err, results, fields) => {
+        if(!err) {
+          var allDocumentNames = []
+          for (var i in results) {
+            allDocumentNames.push(results[i].documentName)
+          }
+          resolve(allDocumentNames)
+        } else {
+          reject('The testerID does not exist!')
+        }
+      })
+      }).catch((err) => {
+        reject(err)
+      })
+    })
   }
 }

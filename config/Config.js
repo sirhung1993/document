@@ -24,6 +24,7 @@ module.exports = class Config {
         return username + 'It need to be encrypted here'
       }
       this.documentStorageLocation = 'path/to/slate/includes'
+      this.personalStorageLocation = 'path/to/data'
     } else if (DEVorPro === 'PRO' || productionConfigDoesNotExist === undefined) {
       //  For Production Version
       let productionConfigurationPath = path.join(__dirname, '/ProConfig.js')
@@ -35,6 +36,7 @@ module.exports = class Config {
       this.sessionSecret = ProConfig.sessionSecret
       this.encryptingPassword = ProConfig.encryptingPassword
       this.documentStorageLocation = ProConfig.documentStorageLocation
+      this.personalStorageLocation = ProConfig.personalStorageLocation
     }
   }
   }
