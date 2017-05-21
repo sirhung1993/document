@@ -76,6 +76,7 @@ module.exports = class dbDocument {
   }
 
   addNewADocument (documentName, testerID) {
+    var originalSlateContent
     var isDocumentExisted = this.isDocumentExisted(documentName)
     var isDocumentStored = this.isDocumentStored(documentName)
     var documentInfo = {
@@ -118,8 +119,33 @@ module.exports = class dbDocument {
       return Promise.reject(err)
     })
 
-    return addNewDocProcess2
-  }
+    var addNewDocProcess3 = addNewDocProcess2.then(() => {
+      return new Promise ((resolve, reject) => {
+        try {
+          originalSlateContent =
+           fs.readFileSync(config.slateFileLocation, {
+             encoding: 'utf8',
+             flag: 'r'
+           })
+           var modifiedContent =  originalSlateContent.replace(config.slateIncludePosition, config.slateIncludePosition + '\n' + '  - ' + documentName)
+           if (modifiedContent) {
+             fs.writeFileSync(config.slateFileLocation, modifiedContent, {
+               encoding: 'utf8',
+               mode: 0o700,
+               flag: 'w'
+             })
+           }
+        } catch(err) {
+          reject({err: {msg: '' + err}})
+        }
+        resolve()
+      })
+    }).catch((err) => {
+      return Promise.reject(err)
+    })
+
+    return addNewDocProcess3
+}
 
   /*
   * Check that the document exist in Database then
@@ -235,19 +261,24 @@ module.exports = class dbDocument {
     })
 
     return saveAndSubmitProcess3
-  }
-
+}
   getAllDocumentName() {
     return new Promise ((resolve, reject) => {
       this.dbConnect.then((connection) => {
-        connection.query('SELECT documentName FROM ' + dbDocumentInfo,
+        connection.query('SELECT documentName, testerID FROM ' + dbDocumentInfo,
       (err, results, fields) => {
         if(!err) {
+          // console.log(results)
           var allDocumentNames = []
+          var documentOwners = []
           for (var i in results) {
             allDocumentNames.push(results[i].documentName)
+            documentOwners.push(results[i].testerID)
           }
-          resolve(allDocumentNames)
+          resolve({
+            allDocumentNames: allDocumentNames,
+            documentOwners: documentOwners
+          })
         } else {
           reject(err)
         }

@@ -15,7 +15,7 @@ router.get('/logout', (req, res, next) => {
         res.status(200).json({OK: {msg: 'You have logged out suscessfully!'}})
       })
   } else {
-    res.status(401).json({err: {msg: 'Not yet login or session is expire!!'}})
+    res.status(200).json({err: {msg: 'Not yet login or session is expire!!'}})
   }
 
 })
@@ -29,8 +29,16 @@ router.post('/login', (req, res, next) => {
       tester.testerLogin().then( () => {
           req.session.regenerate(function(err) {
             if(!err) {
-              req.session.tester = testerInfo.testerID
-              res.status(200).json({OK: {msg: 'Login ok'}})
+              tester.getTesterVerification().then((isVerified) => {
+                req.session.tester = testerInfo.testerID
+                req.session.isVerified = isVerified
+                res.status(200).json({OK: {
+                  testerID: req.session.tester,
+                  isVerified: req.session.isVerified
+                }})
+              }).catch((err) => {
+                res.status(501).json({err: {msg: err}})
+              })
             } else {
               res.status(500).json({err: {msg: err}})
             }
@@ -38,15 +46,18 @@ router.post('/login', (req, res, next) => {
 
         })
         .catch((err) => {
-            res.json({err: {msg: err}})
+            res.status(200).json({err: {msg: err}})
         })
 })
 
 router.get('/login', (req, res, next) => {
   if(req.session.tester) {
-    res.status(200).json({OK: {msg: 'Login ok'}})
+    res.status(200).json({OK: {
+      testerID: req.session.tester,
+      isVerified: req.session.isVerified
+    }})
   } else {
-    res.status(500).json({err: {msg: 'You need to login first!'}})
+    res.status(200).json({err: {msg: 'You need to login first!'}})
   }
 })
 
@@ -76,6 +87,8 @@ router.get('/getVerification', (req, res, next) => {
         res.status(401).json({err: {msg: 'Your are not a verified user! Please contact ' +
       'admin to get the write permission'}})
       }
+    }).catch((err) => {
+      res.status(501).json({err: {msg: err}})
     })
   } else {
     res.status(401).json({err: {msg: 'You need to login first!'}})
@@ -110,7 +123,7 @@ router.post('/document/addnew', (req, res, next) => {
       tester.addNewDocument(documentName).then(() => {
         res.status(200).json({OK: {msg: 'Add new document suscessfully!'}})
       }).catch((err) => {
-        res.status(400).json(err)
+        res.status(200).json(err)
       })
     } else {
       res.status(401).json({err: {msg: 'You need to be a verified user in order to add new document!'}})
@@ -149,7 +162,7 @@ router.post('/document/saveAndSubmit', (req, res, next) => {
          res.status(200).json({OK: {msg: 'You save and submit the document suscessfully!'}})
          return 1
       }).catch((err) => {
-        res.status(400).json({err: {msg: err.code}})
+        res.status(400).json({err: {msg: 'err'}})
       })
     } else {
       res.status(401).json({err: {msg: 'You need to be a verified user in order to add new document!'}})

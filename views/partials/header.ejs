@@ -11,10 +11,13 @@
       <p></p>
     </div>
     <div class="w3-row-padding w3-rest">
-      <div class="w3-col w3-half w3-border w3-hover-border-yellow w3-center w3-hover-yellow" id="login">
+      <div class="w3-col w3-third w3-border w3-hover-border-yellow w3-center w3-hover-yellow w3-green" id="register">
+          <p class="w3-xlarge w3-text-black">Register</p>
+      </div>
+      <div class="w3-col w3-third w3-border w3-hover-border-yellow w3-center w3-hover-yellow w3-green" id="login"   onclick='$("#loginBox").toggle()'>
           <p class="w3-xlarge w3-text-black">Log in</p>
       </div>
-      <div class="w3-col w3-half w3-border w3-hover-border-yellow w3-center w3-hover-yellow" id="logout" hidden>
+      <div class="w3-col w3-third w3-border w3-hover-border-yellow w3-center w3-hover-yellow w3-green" id="logout" style="display: none;" onclick="logout()">
           <p class="w3-xlarge w3-text-black">Log out</p>
       </div>
     </div>

@@ -25,6 +25,9 @@ module.exports = class Config {
       }
       this.documentStorageLocation = 'path/to/slate/includes'
       this.personalStorageLocation = 'path/to/data'
+      this.slateFileLocation = 'path/to/slate/index.html.md'
+      this.slateIncludePosition = 'includes'
+      this.slateBundleExecFolder = 'path/to/slate'
     } else if (DEVorPro === 'PRO' || productionConfigDoesNotExist === undefined) {
       //  For Production Version
       let productionConfigurationPath = path.join(__dirname, '/ProConfig.js')
@@ -37,6 +40,9 @@ module.exports = class Config {
       this.encryptingPassword = ProConfig.encryptingPassword
       this.documentStorageLocation = ProConfig.documentStorageLocation
       this.personalStorageLocation = ProConfig.personalStorageLocation
+      this.slateFileLocation = ProConfig.slateFileLocation
+      this.slateIncludePosition = ProConfig.slateIncludePosition
+      this.slateBundleExecFolder = ProConfig.slateBundleExecFolder
     }
   }
   }

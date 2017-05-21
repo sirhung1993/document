@@ -57,9 +57,7 @@ module.exports = class Tester {
 
     addNewDocument (documentName) {
       var addNewDocumentProcess = dbDocument.addNewADocument(documentName, this.testerID)
-
       addNewDocumentProcess.then(() => {
-        // console.log('ADD NEW')
         return true
       }).catch((err) => {
         // console.log('Test : ' + id)

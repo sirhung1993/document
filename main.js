@@ -4,7 +4,7 @@ const session = require('express-session')
 const helmet = require('helmet')
 const bodyParser = require('body-parser')
 const form = require('multer')()
-
+const cmd = require('node-cmd')
 const Config = require('./config/Config.js')
 const Tester = require('./router/tester.js')
 
@@ -12,6 +12,17 @@ const Tester = require('./router/tester.js')
 
 const app = express()
 const config = new Config('PRO')
+
+
+  cmd.get('cd /home/hungadmin/document_new/slate/ && bundle exec middleman server', (err, data, stderr) => {
+    if(data) {
+      console.log(data)
+    } else {
+      console.log(err + ' --- ' + stderr)
+    }
+
+  })
+
 app.use(helmet())
 // app.use(helmet.referrerPolicy({ policy: 'same-origin' }))
 app.set('trust proxy', 1)
@@ -32,19 +43,16 @@ app.set('view engine', 'ejs')
 app.use('/src', express.static('./views/src'))
 app.use('/layout', express.static('./views/layout'))
 app.use('/views', express.static('./views'))
-// app.use('/iframe', express.static('./views/iframe'))
 app.set('port', (process.env.PORT || 5000))
 app.use('/tester', Tester)
 
 app.get('/', function (req, res, next) {
-  // res.send ('Hello World!')
   res.render('pages/index')
 })
 
-// app.get('/download/:name' , function ( req , res , next) {
-//     let path = __dirname + '/uploads/' + req.params.name
-//     res.download (path)
-// })
+app.get('(error_page|*)' , function ( req , res , next) {
+    res.render ('pages/error_page')
+})
 
 app.listen(app.get('port'), () => {
   console.log('Server is running at : ' + app.get('port'))
