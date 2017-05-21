@@ -51,6 +51,7 @@ module.exports = class dbDocument {
 
   /*
   * Check that the document has been Stored in "documentStorageLocation"
+  * add an empty file to includes folder
   * If no err, return resolve() , if not return reject()
   *
   */
@@ -120,6 +121,24 @@ module.exports = class dbDocument {
     })
 
     var addNewDocProcess3 = addNewDocProcess2.then(() => {
+      return new Promise ((resolve, reject) => {
+        var storageLocation = config.documentStorageLocation + '/' + documentName + '.md'
+        fs.writeFile(storageLocation, '', {
+          encoding: 'utf8',
+          mode: 0o700,
+          flag: 'wx'
+        },(err) => {
+          if (!err) {
+            resolve()
+          } else {
+            console.log(err)
+            reject(err)
+          }
+        })
+      })
+    })
+
+    var addNewDocProcess4 = addNewDocProcess3.then(() => {
       return new Promise ((resolve, reject) => {
         try {
           originalSlateContent =
@@ -310,4 +329,44 @@ module.exports = class dbDocument {
       })
     })
   }
+/*
+* get the latest document of User in PersonalStorage of current user
+* if not exist get in the INCLUDES folder
+*/
+  getLatestContentOfDocument(documentName, testerID) {
+    var getLatestDoc1 = new Promise((resolve, reject) => {
+      var storageLocation = config.personalStorageLocation + '/' + testerID + '/' + documentName + '-AutoSave' + '.md'
+      fs.readFile(storageLocation,
+        {
+          encoding: 'utf8',
+          flag: 'r'
+        }, (err,data) => {
+          if(!err) {
+            resolve(data)
+          } else {
+            reject(err)
+          }
+        })
+    })
+    var getLatestDoc2= getLatestDoc1.catch((err) => {
+      return new Promise((resolve, reject) => {
+        var slateIncudesFolder = config.documentStorageLocation + '/' +
+        documentName + '.md'
+        fs.readFile(slateIncudesFolder,
+        {
+          encoding: 'utf8',
+          flag: 'r'
+        }, (err, data) => {
+          if(!err) {
+            resolve(data)
+          } else {
+            reject(err)
+          }
+        })
+      })
+    })
+
+    return (getLatestDoc2) ? getLatestDoc2 : getLatestDoc1
+  }
+
 }

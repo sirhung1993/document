@@ -51,7 +51,7 @@ app.get('/', function (req, res, next) {
 })
 
 app.get('(error_page|*)' , function ( req , res , next) {
-    res.render ('pages/error_page')
+    res.status(404).render ('pages/error_page')
 })
 
 app.listen(app.get('port'), () => {

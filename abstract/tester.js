@@ -106,6 +106,17 @@ module.exports = class Tester {
       }).catch((err) => {
         return err
       })
+
       return getAllDoc
+    }
+
+    getLatestContentOfDocument(documentName) {
+      var getLatest = dbDocument.getLatestContentOfDocument(documentName,  this.testerID)
+      getLatest.then((data) => {
+        return data
+      }).catch((err) => {
+        return err
+      })
+      return getLatest
     }
 }

@@ -198,4 +198,19 @@ router.get('/getAllDocumentNameOfATester', (req, res, next) => {
   }
 })
 
+router.get('/getLatestVersionOfCurrentUser/:documentName', (req, res, next) => {
+  var documentName = req.params.documentName
+  if(req.session.isVerified === true) {
+    var tester = new Tester({testerID: req.session.tester})
+    tester.getLatestContentOfDocument(documentName).then((data) => {
+      res.status(200).json({OK: {msg: data}})
+    }).catch((err) => {
+      res.status(200).json({OK: {msg: err}})
+    })
+  } else {
+      res.status(401).json({err: {msg: 'You need to be a verified user in order to get information!'}})
+      return 1
+  }
+})
+
 module.exports = router
