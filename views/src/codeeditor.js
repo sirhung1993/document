@@ -15,6 +15,24 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
   theme: "monokai"
 });
 
+function loadLatestDocumentOfATester() {
+  return new Promise((resolve, reject) => {
+    var documentName = $("#documentNameInput").val()
+    var url = '\\tester\\getLatestVersionOfCurrentUser\\' + documentName
+    $.get(url, (data, status) => {
+      if (data.OK) {
+        var content = data.OK.msg
+        editor.setValue(content)
+        resolve(content)
+      } else {
+        var err = data.err.msg
+        displayError(err)
+        reject(err)
+      }
+    })
+  })
+}
+
 function saveDocument() {
   return new Promise((resolve, reject) => {
     $("#saveDocumentWarning").show("fast", () => {

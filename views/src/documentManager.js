@@ -111,7 +111,9 @@ function modifyADocument() {
     if(documentName) {
       $("#editor").show("fast", () => {
         $("#saveAndSubmitDiv").show("fast", () => {
+          loadLatestDocumentOfATester().then(() => {
 
+          })
         })
       })
 

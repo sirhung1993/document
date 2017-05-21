@@ -205,7 +205,7 @@ router.get('/getLatestVersionOfCurrentUser/:documentName', (req, res, next) => {
     tester.getLatestContentOfDocument(documentName).then((data) => {
       res.status(200).json({OK: {msg: data}})
     }).catch((err) => {
-      res.status(200).json({OK: {msg: err}})
+      res.status(200).json({err: {msg: err}})
     })
   } else {
       res.status(401).json({err: {msg: 'You need to be a verified user in order to get information!'}})
