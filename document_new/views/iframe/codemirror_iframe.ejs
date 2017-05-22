@@ -1,0 +1,24 @@
+<div class="w3-row" id="editor" style="display: none;">
+  <p class="w3-text-blue w3-xlarge"> Please type you document content in the below editor! </p>
+  <!-- <div id="codeeditor" class="w3-rest w3-col w3-mobile"></div> -->
+  <form>
+    <textarea id="code" name="code" style="display: none;">
+
+    </textarea>
+  </form>
+  <div class="w3-large w3-text-green w3-center w3-border">
+      <a href="https://github.com/lord/slate/wiki/Markdown-Syntax" >How to write document?</a>
+  </div>
+</div>
+<div class="w3-panel w3-orange w3-container warningBox" id="saveDocumentWarning" style="display: none;">
+  <button class = "w3-button w3-half w3-green w3-hover-yellow" onclick="saveDocumentConfirm()"> ACCEPT </button>
+  <button class = "w3-green w3-half w3-indigo w3-hover-yellow" onclick="cancelWarning()"> DENIED </button>
+</div>
+<div class="w3-panel w3-orange w3-container warningBox" id="saveAndSubmitDocumentWarning" style="display: none;">
+  <button class = "w3-button w3-half w3-green w3-hover-yellow" onclick="saveDocumentAndSubmitConfirm()"> ACCEPT </button>
+  <button class = "w3-green w3-half w3-indigo w3-hover-yellow" onclick="cancelWarning()"> DENIED </button>
+</div>
+<div class="w3-row" id="saveAndSubmitDiv" style="display: none;">
+  <button class = "w3-button w3-half w3-indigo w3-hover-yellow" onclick="saveDocument()"> SAVE </button>
+  <button class = "w3-button w3-half w3-indigo w3-hover-yellow" onclick="saveAndSubmitDocument()"> SAVE AND SUBMIT </button>
+</div>
