@@ -1,43 +1,85 @@
 <!-- views/partials/header.ejs -->
 <div class=" w3-bar w3-blue ">
-  <div class="w3-row-padding">
-    <div class="w3-half">
-
+  <div class="w3-row">
+    <div class="w3-col" style="width:1%">
+        <p> </p>
     </div>
-    <div class="w3-col" style="width:20%">
-      <p class="w3-bar-item w3-button w3-mobile w3-xlarge">RBT Document</p>
+    <div class="w3-col" style="width:19%">
+      <p class="w3-bar-item w3-button w3-mobile w3-large" id="MainPage"><a href="https://10.184.142.120/document/" target="_blank">RBT Document</a></p>
+      <p class="w3-btn w3-button w3-mobile w3-xlarge w3-hover-light-blue w3-blue" style="display:none" id="Back2Doc" onclick="ExitPhotosViews()"><b>&larr;</b></p>
     </div>
-    <div class="w3-col" style="width:40%">
-      <p></p>
+    <div class="w3-col" style="width:60%">
+    <p></p>
     </div>
-    <div class="w3-row-padding w3-rest">
-      <div class="w3-col w3-third w3-border w3-hover-border-yellow w3-center w3-hover-yellow w3-green" id="register" onclick="registerNewUser()">
-          <p class="w3-xlarge w3-text-black">Register</p>
-      </div>
-      <div class="w3-col w3-third w3-border w3-hover-border-yellow w3-center w3-hover-yellow w3-green" id="login"   onclick='$("#registerBox").hide();$("#loginBox").toggle()'>
-          <p class="w3-xlarge w3-text-black">Log in</p>
-      </div>
-      <div class="w3-col w3-third w3-border w3-hover-border-yellow w3-center w3-hover-yellow w3-green" id="logout" style="display: none;" onclick="logout()">
-          <p class="w3-xlarge w3-text-black">Log out</p>
-      </div>
+    
+    <div class="w3-center w3-col " style="width:19%">
+        <p>
+       <span id="TesterLogName" class="w3-text-white w3-left-align"></span>   
+        
+        <span id="logout" style="display: none; cursor:pointer;" onclick="logout()" class="w3-hover-red w3-text-white w3-right-align w3-small">Log out</span>
+       </p>
+       <p id="userInfoAdminRight" class="w3-tiny w3-text-black" ></p>
+      
     </div>
   </div>
 </div>
 
-<div class="w3-display-container" style="height:300px;display:none;" id="registerBox">
-  <div class="w3-middle">
-    <div class="w3-container w3-light-blue">
+
+<div class="w3-card-4 w3-display-middle w3-third w3-row" style="display:none;" id="registerBox">
+
+    <div class="w3-container w3-light-blue " >
       <h2>Regiter form</h2>
     </div>
 
     <div class="w3-container" id="registerForm" onkeypress="onLoginInput(event)">
-      <label>Your tester ID</label>
-      <input class="w3-input" type="text" name="regTesterID" placeholder="buh81hc">
-      <label>Password</label>
-      <input class="w3-input" type="password" name="regPassword1">
-      <label>Re-type password</label>
-      <input class="w3-input" type="password" name="regPassword2">
+        <label>Your tester ID</label>
+        <input class="w3-input w3-animate-input" style="width:50%" type="text" name="regTesterID" placeholder="UserName"/>
+        <label>Password</label>
+        <div class="w3-display-container">
+            <input class="w3-input w3-animate-input" style="width:50%" type="password" name="regPassword1" id="Pw2"/>
+            <div onclick='ShowHidePassword(this,"Pw2");' class="w3-display-right" style="cursor:pointer;">Show</div>
+           
+        </div>
+        <p></p>
+        <label>Re-type password</label>
+        <div class="w3-display-container">
+            <input class="w3-input w3-animate-input" style="width:50%" type="password" name="regPassword2" id="Pw3"/>
+            <div onclick='ShowHidePassword(this,"Pw3");' class="w3-display-right" style="cursor:pointer;">Show</div>
+        </div>
     </div>
-      <button id="regButton" class="w3-round w3-btn-block w3-blue w3-ripple w3-hover-indigo" onclick="regRequest()" >Register as a regular user! </button>
-  </div>
+        <p class="w3-center">
+            <button id="regButton" class="w3-btn w3-blue w3-ripple w3-hover-indigo w3-padding-8" onclick="regRequest()" >Register as a regular user! </button>
+        </p>       
+        <p class="w3-center">
+            I had an acount!  <span class="w3-text-blue" style="cursor:pointer;" onclick='$("#registerBox").hide("slow");$("#loginBox").toggle("slow");'><a>Login</a></span>
+            
+        </p>    
+
 </div>
+
+<div class="w3-middle w3-card-4 w3-display-middle w3-third w3-row w3-color-white" style="display:block;" id="loginBox">
+  
+    
+    <div class="w3-container w3-light-blue">
+      <h2>Log in</h2>
+    </div>
+    <p></p>
+    <div class="w3-container" id="inputForm" onkeypress="onLoginInput(event)">
+      <label>Tester ID</label>
+      <input class="w3-input w3-animate-input" style="width:50%" type="text" name="testerID" autofocus>
+      <p></p>
+      <label>Password</label>
+        <div class="w3-display-container">
+          <input class="w3-input w3-animate-input" style="width:50%" type="password" name="password" id="Pw1">
+          <div onclick='ShowHidePassword(this,"Pw1");' id="Sp1" class="w3-display-right w3-round-xxlarge" style="cursor:pointer;">Show</div>         
+        </div>
+    </div>
+    <p class="w3-center">
+      <button id="loginButton" class="w3-btn w3-blue w3-ripple w3-hover-indigo" onclick="loginRequest();" >Log in </button>
+    </p>
+    <p class="w3-center">
+        No account?  <span class="w3-text-blue" style="cursor:pointer;" onclick="registerNewUser()" ><a>Register an account</a></span>
+    </p>
+  </div>
+
+

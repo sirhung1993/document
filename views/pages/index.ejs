@@ -1,17 +1,23 @@
 <!DOCTYPE html>
 <html>
-<body>
   <head>
     <% include ../partials/head %>
   </head>
+<body>
+
   <header>
       <% include ../partials/header %>
   </header>
+  <div>
   <% include ../iframe/login_iframe %>
   <% include ../iframe/document_management %>
   <% include ../iframe/codemirror_iframe %>
-  <footer>
+
+
+  <footer class="w3-row " style="position:fixed;
+    bottom:0;right:0;left:0;">
       <% include ../partials/footer %>
   </footer>
+ 
 </body>
 </html>

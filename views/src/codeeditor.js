@@ -1,5 +1,5 @@
 'use strict'
-// setTimeout(() => {
+// setTimeout(function (  )  {
 //   var edittor = CodeMirror(document.getElementById("codeeditor"), {
 //     mode:  "markdown",
 //     theme: "monokai",
@@ -16,12 +16,13 @@ var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
 });
 
 function loadLatestDocumentOfATester() {
-  return new Promise((resolve, reject) => {
+  return new Promise(function ( resolve, reject )  {
     var documentName = $("#documentNameInput").val()
-    var url = '//tester//getLatestVersionOfCurrentUser//' + documentName
-    $.get(url, (data, status) => {
+    var url = '/tester/getLatestVersionOfCurrentUser/' + documentName
+    $.get(url, function ( data, status )  {
       if (data.OK) {
         var content = data.OK.msg
+		console.log('content :' + content)
         editor.setValue(content)
         resolve(content)
       } else {
@@ -34,46 +35,50 @@ function loadLatestDocumentOfATester() {
 }
 
 function saveDocument() {
-  return new Promise((resolve, reject) => {
-    $("#saveDocumentWarning").show("fast", () => {
-      var documentName = $("#documentNameInput").val()
-      $("h3").remove(".warning")
-      var warningStatement = 'Do you actually want to save <span class="w3-text-blue w3-xlarge">' + documentName + '</span> file?'
-      $("#saveDocumentWarning").prepend("<h3 class=\"warning\">" + warningStatement + "</h3>")
-      setTimeout(() => {
-      $(".warningBox").hide("fast", () => {
-      })
-    },10000)
-    })
-    resolve(documentName)
-  })
+    if (CheckKeyWordExit() === true){
+        return new Promise(function ( resolve, reject )  {
+            $("#saveDocumentWarning").show("fast", function (  )  {
+                var documentName = $("#documentNameInput").val()
+                $("h3").remove(".warning")
+                var warningStatement = 'Do you actually want to save <span class="w3-text-blue w3-xlarge">' + documentName + '</span> file?'
+                $("#saveDocumentWarning").prepend("<h3 class=\"warning\">" + warningStatement + "</h3>")
+                setTimeout(function (  )  {
+                    $(".warningBox").hide("fast", function (  )  {
+                    })
+                },10000)
+            })
+            resolve(documentName)
+        })
+    }
 }
 
 function saveAndSubmitDocument() {
-  return new Promise((resolve, reject) => {
-    $("#saveAndSubmitDocumentWarning").show("fast", () => {
-      var documentName = $("#documentNameInput").val()
-      $("h3").remove(".warning")
-      var warningStatement = 'Do you actually want to save and submit <span class="w3-text-blue w3-xlarge">' + documentName + '</span> file to RBT Document? This will immediately update document.'
-      $("#saveAndSubmitDocumentWarning").prepend("<h3 class=\"warning\">" + warningStatement + "</h3>")
-      setTimeout(() => {
-      $(".warningBox").hide("fast", () => {
-      })
-    },10000)
-    })
-    resolve(documentName)
-  })
+    if (CheckKeyWordExit() === true){
+        return new Promise(function ( resolve, reject )  {
+            $("#saveAndSubmitDocumentWarning").show("fast", function (  )  {
+                var documentName = $("#documentNameInput").val()
+                $("h3").remove(".warning")
+                var warningStatement = 'Do you actually want to save and submit <span class="w3-text-blue w3-xlarge">' + documentName + '</span> file to RBT Document? This will immediately update document.'
+                $("#saveAndSubmitDocumentWarning").prepend("<h3 class=\"warning\">" + warningStatement + "</h3>")
+                setTimeout(function (  )  {
+                    $(".warningBox").hide("fast", function (  )  {
+                    })
+                },10000)
+            })
+        resolve(documentName)
+        })
+    }
 }
 
 function saveDocumentConfirm() {
-  return new Promise((resolve, reject) => {
+  return new Promise(function ( resolve, reject )  {
     var text = editor.getValue()
     var documentName = $("#documentNameInput").val()
     $.post("tester/document/save",
     {
       documentName: documentName,
       documentContent: text
-    }, (data, status) => {
+    }, function ( data, status )  {
       if(data.OK) {
         displaySuccess(data.OK.msg)
         resolve()
@@ -86,14 +91,14 @@ function saveDocumentConfirm() {
 }
 
 function saveDocumentAndSubmitConfirm() {
-  return new Promise((resolve, reject) => {
+  return new Promise(function ( resolve, reject )  {
     var text = editor.getValue()
     var documentName = $("#documentNameInput").val()
     $.post("tester/document/saveAndSubmit",
     {
       documentName: documentName,
       documentContent: text
-    }, (data, status) => {
+    }, function ( data, status )  {
       if(data.OK) {
         displaySuccess(data.OK.msg)
         resolve()

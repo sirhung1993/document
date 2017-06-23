@@ -1,4 +1,4 @@
-<div id="userInfo" class="w3-row-padding" style="display: none;">
+<!-- <div id="userInfo" class="w3-row-padding" style="display: none;">
   <table class="w3-table-all w3-centered">
     <tr class="w3-hover-green">
       <th style="width:40%;">testerID</th>
@@ -9,38 +9,95 @@
       <td style="width:60%;" id="userInfoAdminRight"></td>
     </tr>
   </table>
+</div> -->
+<div class="w3-row" id="DocManage" style="display: none;">
+    <div class="w3-col w3-mobile" style="width:5%">
+        <p style="font-size:20px" 
+        class="w3-btn w3-white w3-hover-gray" onclick="ShowHideDocList()">&#9776;</p>
+    </div>
+    <div class="w3-col w3-mobile" style="width:40%" id="DocList">
+        <br></br>
+        <div id="documentInfo" class="w3-row-padding" >
+            <div class="w3-rest">
+            <label id="documentName" class="w3-center-align w3-large">Document Name</label>
+            <p class="w3-text-blue w3-large"> Please type the document name you want to add or modify here. The document name must is <span class="w3-text-red">UNIQUE</span>.</p>
+            </div>
+            <div class="w3-rest">
+                <div class="w3-row" >
+                    
+                    <input style="width:79%" class="w3-input w3-border w3-padding w3-col w3-mobile" type="text" placeholder="Search for names.." id="documentNameInput" onkeyup="myFunction();addNewHideModify();" onclick="this.setSelectionRange(0, this.value.length);" autofocus>
+                    <div class="w3-col" style="width:1%"><p></p></div>
+                    <button class = "w3-btn w3-hover-blue w3-col w3-indigo w3-animation-right w3-mobile" onclick="addNewDocument()" style="width:20%" id="btnAdd"> 
+                    ADD NEW
+                    </button>
+                </div>
+                <table class="w3-table-all w3-margin-top" id="documentInfoTable">
+                    <tr>
+                        <th style="width:100%;" class="w3-green">Document Name</th>
+                       
+                    </tr>
+                </table>
+            </div>
+            
+        </div>
+
+        
+
+    </div>
+ 
+    <div class="w3-col w3-mobile" style="width:5%">
+        <p></p>
+    </div>
+    <div class="w3-col" style="width:40%" id="DocText">
+        <div class="w3-animate-left " id="editor" style="display: none;">
+          <p class="w3-text-blue w3-xlarge"> Please type you document content in the below editor! </p>
+          <!-- <div id="codeeditor" class="w3-rest w3-col w3-mobile"></div> -->
+           <div class=" w3-block w3-light-blue">
+           <div class = "w3-btn w3-indigo w3-hover-blue w3-small" onclick="PhotosView()"> Attach Photos </div>
+           <p></p>
+           </div>
+          <form>
+            <textarea id="code" name="code" style="display: none;" cols="3">
+
+            </textarea>
+          </form>
+            <div class="w3-large w3-text-green w3-border w3-row">                
+                <button class = "w3-btn w3-indigo w3-hover-blue w3-small" onclick="saveDocument()"> SAVE </button>
+                <span> </span>
+                <button class = "w3-btn w3-indigo w3-hover-blue w3-small" onclick="saveAndSubmitDocument()"> SAVE AND SUBMIT </button>
+                <span class="w3-margin-right">
+                <span class="w3-small">Don't know mark down languge?</span>
+                <a href="https://github.com/lord/slate/wiki/Markdown-Syntax" class="w3-small" target="_blank">Visit this link? or</a>
+                <a href="https://github.com/adam-p/markdown-here/wiki/Markdown-Cheatsheet" class="w3-small" target="_blank">Markdown syntax full</a>
+                </span>
+            </div>
+        </div>
+    </div>
 </div>
-<div id="documentInfo" class="w3-row-padding" style="display: none;">
-  <div class="w3-rest">
-    <label id="documentName" class="w3-center-align w3-large">Document Name</label>
-    <p class="w3-text-blue w3-large"> Please type the document name you want to add or modify here. The document name must is <span class="w3-text-red">UNIQUE</span>.</p>
+
+<iframe id="ImageColect" style="display:none;width:100%;height:100vh"  >
+
+</iframe>
+
+ <div class="w3-card-4 w3-light-blue warningBox w3-third w3-center" id="addNewWarning" style="display:none;position: fixed; width: 500px;top: 50%;left: 50%;margin-top: -100px;margin-left: -250px; z-index: 100;">
+            <p "w3-tiny w3-gray"> </p>
+            <p>
+            <button class = "w3-btn w3-half w3-green w3-hover-yellow w3-border" onclick="confirmAddNew()"> ACCEPT </button>
+            <button class = " w3-btn w3-green w3-half w3-hover-yellow w3-border" onclick="cancelWarning()"> DENIED </button>
+            </p>
+</div>
+
+<div id="errorWarning" class="w3-card-4 w3-red warningBox w3-third w3-center" style="display:none;position: fixed; width: 500px;top: 50%;left: 50%;margin-top: -100px;margin-left: -250px; z-index: 100;">    
   </div>
-  <div class="w3-rest">
-    <input class="w3-input w3-border w3-padding" type="text" placeholder="Search for names.." id="documentNameInput" onkeyup="myFunction()" autofocus>
+</div>
 
-      <table class="w3-table-all w3-margin-top" id="documentInfoTable">
-        <tr>
-          <th style="width:60%;">Document Name</th>
-          <th style="width:40%;">Owner</th>
-        </tr>
-      </table>
+<div id="suscessNoticement" class="w3-card-4 w3-green warningBox w3-third w3-center" style="display:none;position: fixed; width: 500px;top: 50%;left: 50%;margin-top: -100px;margin-left: -250px; z-index: 100;">
+</div>
+
+<div  id="inputMissing" class="w3-card-4 w3-green warningBox w3-third w3-center" style="display:none;position: fixed; width: 500px;top: 50%;left: 50%;margin-top: -100px;margin-left: -250px; z-index: 100;">
+  <h3>Please input Document name!</h3>
+  <div class="w3-center">
+    <input type="button" class="w3-btn w3-light-blue w3-hover-blue" value="  OK  " onclick="$('#inputMissing').hide()" ></input>
+    <p></p>
   </div>
-    <button class = "w3-button w3-half w3-indigo w3-hover-yellow" onclick="addNewDocument()"> ADD NEW </button>
-    <button class = "w3-button w3-half w3-indigo w3-hover-yellow" onclick="modifyADocument()"> MODIFY </button>
-</div>
-
-<div class="w3-panel w3-orange w3-container warningBox" id="addNewWarning" style="display: none;">
-  <button class = "w3-button w3-half w3-green w3-hover-yellow" onclick="confirmAddNew()"> ACCEPT </button>
-  <button class = "w3-green w3-half w3-indigo w3-hover-yellow" onclick="cancelWarning()"> DENIED </button>
-</div>
-
-<div class="w3-panel w3-red w3-container warningBox" id="errorWarning" style="display: none;">
-</div>
-
-<div class="w3-panel w3-green w3-container warningBox" id="suscessNoticement" style="display: none;">
-</div>
-
-
-<div class="w3-panel w3-blue w3-container warningBox" id="inputMissing" style="display: none;">
-  <h3>Please input needed information!</h3>
 </div>

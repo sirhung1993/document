@@ -21,7 +21,7 @@ function w3CodeColorize(x, lang) {
   var csspropertycolor = "red";
   var csspropertyvaluecolor = "mediumblue";
   var cssdelimitercolor = "black";
-  var cssimportantcolor = "red";
+  var cssimportantcolor = "red";  
   var jscolor = "black";
   var jskeywordcolor = "mediumblue";
   var jsstringcolor = "brown";
@@ -32,18 +32,18 @@ function w3CodeColorize(x, lang) {
   var phpkeywordcolor = "mediumblue";
   var phpglobalcolor = "goldenrod";
   var phpstringcolor = "brown";
-  var phpnumbercolor = "red";
+  var phpnumbercolor = "red";  
   var angularstatementcolor = "red";
   var sqlcolor = "black";
   var sqlkeywordcolor = "mediumblue";
   var sqlstringcolor = "brown";
-  var sqlnumbercolor = "red";
+  var sqlnumbercolor = "red";  
   if (!lang) {lang = "html"; }
   if (lang == "html") {return htmlMode(x);}
   if (lang == "css") {return cssMode(x);}
   if (lang == "js") {return jsMode(x);}
   if (lang == "php") {return phpMode(x);}
-  if (lang == "sql") {return sqlMode(x);}
+  if (lang == "sql") {return sqlMode(x);}  
   return x;
   function extract(str, start, end, func, repl) {
     var s, e, d = "", a = [];
@@ -52,7 +52,7 @@ function w3CodeColorize(x, lang) {
       e = str.indexOf(end, s);
       if (e == -1) {e = str.length;}
       if (repl) {
-        a.push(func(str.substring(s, e + (end.length))));
+        a.push(func(str.substring(s, e + (end.length))));      
         str = str.substring(0, s) + repl + str.substr(e + (end.length));
       } else {
         d += str.substring(0, s);
@@ -73,7 +73,7 @@ function w3CodeColorize(x, lang) {
       note = "";
       startpos = rest.indexOf("&lt;");
       if (rest.substr(startpos, 9).toUpperCase() == "&LT;STYLE") {note = "css";}
-      if (rest.substr(startpos, 10).toUpperCase() == "&LT;SCRIPT") {note = "javascript";}
+      if (rest.substr(startpos, 10).toUpperCase() == "&LT;SCRIPT") {note = "javascript";}        
       endpos = rest.indexOf("&gt;", startpos);
       if (endpos == -1) {endpos = rest.length;}
       done += rest.substring(0, startpos);
@@ -107,7 +107,7 @@ function w3CodeColorize(x, lang) {
   }
   function tagMode(txt) {
     var rest = txt, done = "", startpos, endpos, result;
-    while (rest.search(/(\s|<br>)/) > -1) {
+    while (rest.search(/(\s|<br>)/) > -1) {    
       startpos = rest.search(/(\s|<br>)/);
       endpos = rest.indexOf("&gt;");
       if (endpos == -1) {endpos = rest.length;}
@@ -131,7 +131,7 @@ function w3CodeColorize(x, lang) {
       doublefnuttpos = rest.indexOf('"', startpos);
       spacepos = rest.indexOf(" ", startpos + 2);
       if (spacepos > -1 && (spacepos < singlefnuttpos || singlefnuttpos == -1) && (spacepos < doublefnuttpos || doublefnuttpos == -1)) {
-        endpos = rest.indexOf(" ", startpos);
+        endpos = rest.indexOf(" ", startpos);      
       } else if (doublefnuttpos > -1 && (doublefnuttpos < singlefnuttpos || singlefnuttpos == -1) && (doublefnuttpos < spacepos || spacepos == -1)) {
         endpos = rest.indexOf('"', rest.indexOf('"', startpos) + 1);
       } else if (singlefnuttpos > -1 && (singlefnuttpos < doublefnuttpos || doublefnuttpos == -1) && (singlefnuttpos < spacepos || spacepos == -1)) {
@@ -216,7 +216,7 @@ function w3CodeColorize(x, lang) {
       done += cssImportantMode(rest.substring(s, s + 10));
       rest = rest.substr(s + 10);
     }
-    result = done + rest;
+    result = done + rest;    
     if (result.substr(result.length - 1, 1) == ";" && result.substr(result.length - 6, 6) != "&nbsp;" && result.substr(result.length - 4, 4) != "&lt;" && result.substr(result.length - 4, 4) != "&gt;" && result.substr(result.length - 5, 5) != "&amp;") {
       result = result.substring(0, result.length - 1) + "<span style=color:" + cssdelimitercolor + ">;</span>";
     }
@@ -242,7 +242,7 @@ function w3CodeColorize(x, lang) {
       sfnuttpos = getPos(rest, "'", "'", jsStringMode);
       dfnuttpos = getPos(rest, '"', '"', jsStringMode);
       compos = getPos(rest, /\/\*/, "*/", commentMode);
-      comlinepos = getPos(rest, /\/\//, "<br>", commentMode);
+      comlinepos = getPos(rest, /\/\//, "<br>", commentMode);      
       numpos = getNumPos(rest, jsNumberMode);
       keywordpos = getKeywordPos("js", rest, jsKeywordMode);
       dotpos = getDotPos(rest, jsPropertyMode);
@@ -307,7 +307,7 @@ function w3CodeColorize(x, lang) {
       sfnuttpos = getPos(rest, "'", "'", sqlStringMode);
       dfnuttpos = getPos(rest, '"', '"', sqlStringMode);
       compos = getPos(rest, /\/\*/, "*/", commentMode);
-      comlinepos = getPos(rest, /--/, "<br>", commentMode);
+      comlinepos = getPos(rest, /--/, "<br>", commentMode);      
       numpos = getNumPos(rest, sqlNumberMode);
       keywordpos = getKeywordPos("sql", rest, sqlKeywordMode);
       if (Math.max(numpos[0], sfnuttpos[0], dfnuttpos[0], compos[0], comlinepos[0], keywordpos[0]) == -1) {break;}
@@ -338,10 +338,10 @@ function w3CodeColorize(x, lang) {
       sfnuttpos = getPos(rest, "'", "'", phpStringMode);
       dfnuttpos = getPos(rest, '"', '"', phpStringMode);
       compos = getPos(rest, /\/\*/, "*/", commentMode);
-      comlinepos = getPos(rest, /\/\//, "<br>", commentMode);
+      comlinepos = getPos(rest, /\/\//, "<br>", commentMode);      
       comhashpos = getPos(rest, "#", "<br>", commentMode);
       numpos = getNumPos(rest, phpNumberMode);
-      keywordpos = getKeywordPos("php", rest, phpKeywordMode);
+      keywordpos = getKeywordPos("php", rest, phpKeywordMode);      
       if (Math.max(numpos[0], sfnuttpos[0], dfnuttpos[0], compos[0], comlinepos[0], comhashpos[0], keywordpos[0]) == -1) {break;}
       mypos = getMinPos(numpos, sfnuttpos, dfnuttpos, compos, comlinepos, comhashpos, keywordpos);
       if (mypos[0] == -1) {break;}
@@ -418,7 +418,7 @@ function w3CodeColorize(x, lang) {
             rpos2 = rpos + words[i].length;
           }
         }
-      }
+      } 
     }
     return [rpos, rpos2, func];
   }
@@ -449,7 +449,7 @@ function w3CodeColorize(x, lang) {
           break;
         }
       }
-    }
+    }  
     return [-1, -1, func];
-  }
+  }  
 }

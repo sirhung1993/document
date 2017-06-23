@@ -11,7 +11,7 @@ const Tester = require('./router/tester.js')
 // console.log()
 
 const app = express()
-const config = new Config('PRO')
+const config = new Config()
 
 
   cmd.get('cd /home/hungadmin/document_new/slate/ && bundle exec middleman server', (err, data, stderr) => {

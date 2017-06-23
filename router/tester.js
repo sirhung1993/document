@@ -138,7 +138,10 @@ router.post('/document/save', (req, res, next) => {
     if(req.session.isVerified === true) {
       var tester = new Tester({testerID: req.session.tester})
       var documentName = req.body.documentName
-      var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+      // var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+	  var documentContent = req.body.documentContent
+	  // documentContent = documentContent.replace(/<[^/]*script/g, '&ltscript')
+	  // documentContent = documentContent.replace(/<\/.*script/g, '&lt/script')
       tester.saveDocument(documentName, documentContent).then(() => {
         return res.status(200).json({OK: {msg: 'You save the document suscessfully!'}})
       }).catch((err) => {
@@ -157,7 +160,10 @@ router.post('/document/saveAndSubmit', (req, res, next) => {
     if(req.session.isVerified === true) {
       var tester = new Tester({testerID: req.session.tester})
       var documentName = req.body.documentName
-      var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+      // var documentContent = xssFilters.inHTMLData(req.body.documentContent)
+	  var documentContent = req.body.documentContent
+	  // documentContent = documentContent.replace(/<[^/]*script/g, '&ltscript')
+	  // documentContent = documentContent.replace(/<\/.*script/g, '&lt/script')
       tester.saveAndSubmitDocument(documentName, documentContent).then(() => {
          res.status(200).json({OK: {msg: 'You save and submit the document suscessfully!'}})
          return 1

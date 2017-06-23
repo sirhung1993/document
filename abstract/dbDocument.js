@@ -284,7 +284,7 @@ module.exports = class dbDocument {
   getAllDocumentName() {
     return new Promise ((resolve, reject) => {
       this.dbConnect.then((connection) => {
-        connection.query('SELECT documentName, testerID FROM ' + dbDocumentInfo,
+        connection.query('SELECT documentName, testerID FROM ' + dbDocumentInfo + ' ORDER BY id DESC',
       (err, results, fields) => {
         if(!err) {
           // console.log(results)
